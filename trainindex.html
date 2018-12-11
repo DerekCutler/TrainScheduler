@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Train Scheduler</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Firebase Reference -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+    <!-- Moment.js Reference -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+    <style>
+        #train-table th,
+        td {
+            display: inline-block;
+            width: 16.575%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Train Tracker -->
+    <div class="container">
+
+
+        <!-- Jumbotron -->
+        <div class="jumbotron" style="background-color: #004466; color: #00ffa2">
+            <h1 class="text-center">Crazy Train</h1>
+            <h3 class="text-center">Train Schedule Tracker</h3>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Train 411 Table-->
+                <div class="card mb-4">
+                    <div class="card-header">Train Information:</div>
+                    <div class="card-body">
+                        <table class="table table-lg table-hover" id="train-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Train Name</th>
+                                    <th scope="col">Destination</th>
+                                    <th scope="col">Frequncy (min)</th>
+                                    <th scope="col">Next Arrival</th>
+                                    <th scope="col">Minutes Away</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HERE YO -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Add Train Form  -->
+                <div class="card mb-4">
+                    <div class="card-header primary">Add a New Train</div>
+                    <div class="card-body">
+
+                        <!-- Entry Form -->
+                        <form>
+                            <div class="form-group">
+                                <label for="train-name-input">Train Name</label>
+                                <input class="form-control" id="train-name-input" placeholder=" Your train goes here"
+                                    type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="role-input">Destination</label>
+                                <input class="form-control" id="role-input" placeholder=" Where are you going?" type="text">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="start-input">First Train Time (HH:MM - Milatary Time)</label>
+                                <input class="form-control" id="start-input" placeholder=" 13:42" type="text">
+                                <!-- ** PROBABLY WONT BE TEXT NEEDS MIL TIME FORMAT ** -->
+                            </div>
+                            <div class="form-group">
+                                <label for="rate-input">Frequency (min)</label>
+                                <input class="form-control" id="rate-input" placeholder=" 21" type="text">  
+                            </div>
+                            <button class="btn btn-info float-left" id="add-train-btn">Submit</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="javascript.js"></script>
+</body>
+
+</html>
