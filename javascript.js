@@ -74,19 +74,51 @@ database.ref().on("child_added", function (childSnapshot) {
 
   // alert("You added the train " + trainName + " heading to " + trainDestination + ".  This train first ran at " + trainStartTime + " and it arrives every " + trainFrequency + " minutes.");
 
-  // Calculations
-  // var empMonths = moment().diff(moment(empStart, "X"), "months");
-  // console.log(empMonths);
+
+  // Variables and Calculations
+
+  // What time is it now
+  var timeCurrent = moment();
+
+  // Delta SHOULD BE the startTime: startTimeInput and the current time
+  var delta = moment().diff(moment(trainStartTime), "minutes");
+  alert("minutes " + delta);
+
+  // deltaModulus SHOULD BE the remainder from delta modulus frequency
+  var deltaModulus = delta % trainFrequency;
 
 
+  // Math for Next Arrival 
+  if (timeCurrent < trainStartTime) {
+    trainArrival = trainStartTime;
+  } else if (timeCurrent === trainStartTime) {
+    trainArrival = trainStartTime;
+  } /*else if {
+    trainArrival = moment().format('LT') + deltaModulus;
+  }*/ else {
+    trainArrival = "I wish this was functioning"
+  }
+
+
+
+  // Math for Minutes Away
+  if (timeCurrent < trainStartTime) {
+    trainMinutesAway = trainStartTime -= (moment(), "minutes");
+  } else if (timeCurrent === trainStartTime) {
+    trainMinutesAway = "Your train has arrived"
+  } /*else if (timeCurrent > trainStartTime) {
+    trainMinutesAway = deltaModulus;
+  }*/ else {
+    trainMinutesAway = "I wish this was functioning"
+  }
 
   // Create the new row
   var newRow = $("<tr>").append(
     $("<td>").text(trainName),
     $("<td>").text(trainDestination),
     $("<td>").text(trainFrequency),
-    // $("<td>").text(trainArrival),
-    // $("<td>").text(trainMinutesAway),
+    $("<td>").text(trainArrival),
+    $("<td>").text(trainMinutesAway),
   );
 
   // Append the new row to the table
