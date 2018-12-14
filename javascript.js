@@ -11,7 +11,7 @@
 
 
 // 1. Initialize Firebase
-var config = {
+let config = {
   apiKey: "AIzaSyDKWpaQLRw32-L-Dd3oZ66L9DV2tpoJ7OQ",
   authDomain: "train-schedule-316e5.firebaseapp.com",
   databaseURL: "https://train-schedule-316e5.firebaseio.com",
@@ -35,7 +35,7 @@ $("#add-train-btn").on("click", function (event) {
   let frequencyInput = $("#frequency-input").val().trim();
 
   // Creates local "temporary" object for holding employee data
-  var newTrain = {
+  let newTrain = {
     name: trainNameInput,
     destination: destinationInput,
     startTime: startTimeInput,
@@ -67,58 +67,55 @@ database.ref().on("child_added", function (childSnapshot) {
   // alert(childSnapshot.val());
 
   // Store everything into a variable.
-  var trainName = childSnapshot.val().name;
-  var trainDestination = childSnapshot.val().destination;
-  var trainStartTime = childSnapshot.val().startTime;
-  var trainFrequency = childSnapshot.val().frequency;
+  let trainName = childSnapshot.val().name;
+  let trainDestination = childSnapshot.val().destination;
+  let trainStartTime = childSnapshot.val().startTime;
+  let trainFrequency = childSnapshot.val().frequency;
 
   // alert("You added the train " + trainName + " heading to " + trainDestination + ".  This train first ran at " + trainStartTime + " and it arrives every " + trainFrequency + " minutes.");
 
-
-  // Variables and Calculations
-
-  // What time is it now
-  var timeCurrent = moment();
-
-  // Delta SHOULD BE the startTime: startTimeInput and the current time
-  var delta = moment().diff(moment(trainStartTime), "minutes");
-  alert("minutes " + delta);
-
-  // deltaModulus SHOULD BE the remainder from delta modulus frequency
-  var deltaModulus = delta % trainFrequency;
-
-
-  // Math for Next Arrival 
-  if (timeCurrent < trainStartTime) {
-    trainArrival = trainStartTime;
-  } else if (timeCurrent === trainStartTime) {
-    trainArrival = trainStartTime;
-  } /*else if {
-    trainArrival = moment().format('LT') + deltaModulus;
-  }*/ else {
-    trainArrival = "I wish this was functioning"
+  // Calculations
+// JARED
+  let currentTime = moment();
+  let timeSplitArray = trainStartTime.split(":");
+  let hour = timeSplitArray[0];
+  let minute = timeSplitArray[1];
+  
+  // Creating a new moment date object, and immediately set the hour and minute.
+  trainStartTime = moment().hour(hour).minute(minute);
+  
+  let formattedNextTrainTime = '';
+  let formattedMinutesAway = '';
+  
+  // Calculate next arrival time and minutes away.
+  if (currentTime.isAfter(trainStartTime, 'minutes')) {
+      while(currentTime.isAfter(trainStartTime)) {
+          trainStartTime.add(trainFrequency, 'minutes');
+      }
+  
+      formattedNextTrainTime = trainStartTime.format('h:mm A');
+      formattedMinutesAway = trainStartTime.diff(currentTime, 'minutes');
   }
-
-
-
-  // Math for Minutes Away
-  if (timeCurrent < trainStartTime) {
-    trainMinutesAway = trainStartTime -= (moment(), "minutes");
-  } else if (timeCurrent === trainStartTime) {
-    trainMinutesAway = "Your train has arrived"
-  } /*else if (timeCurrent > trainStartTime) {
-    trainMinutesAway = deltaModulus;
-  }*/ else {
-    trainMinutesAway = "I wish this was functioning"
+  else if(currentTime.isSameOrBefore(trainStartTime, 'minutes')) {
+      formattedNextTrainTime = trainStartTime.format('h:mm A');
+      formattedMinutesAway = trainStartTime.diff(currentTime, 'minutes');
   }
+  
+  console.log('Next Arrival: ' + formattedNextTrainTime);
+  console.log('Minutes Away: ' + formattedMinutesAway)
+// JARED
+
+//ONE MORE BACK
+
+
 
   // Create the new row
-  var newRow = $("<tr>").append(
+  let newRow = $("<tr>").append(
     $("<td>").text(trainName),
     $("<td>").text(trainDestination),
     $("<td>").text(trainFrequency),
-    $("<td>").text(trainArrival),
-    $("<td>").text(trainMinutesAway),
+    $("<td>").text(formattedNextTrainTime),
+    $("<td>").text(formattedMinutesAway),
   );
 
   // Append the new row to the table
