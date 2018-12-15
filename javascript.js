@@ -11,7 +11,7 @@
 
 
 // 1. Initialize Firebase
-let config = {
+var config = {
   apiKey: "AIzaSyDKWpaQLRw32-L-Dd3oZ66L9DV2tpoJ7OQ",
   authDomain: "train-schedule-316e5.firebaseapp.com",
   databaseURL: "https://train-schedule-316e5.firebaseio.com",
@@ -35,7 +35,7 @@ $("#add-train-btn").on("click", function (event) {
   let frequencyInput = $("#frequency-input").val().trim();
 
   // Creates local "temporary" object for holding employee data
-  let newTrain = {
+  var newTrain = {
     name: trainNameInput,
     destination: destinationInput,
     startTime: startTimeInput,
@@ -67,50 +67,83 @@ database.ref().on("child_added", function (childSnapshot) {
   // alert(childSnapshot.val());
 
   // Store everything into a variable.
-  let trainName = childSnapshot.val().name;
-  let trainDestination = childSnapshot.val().destination;
-  let trainStartTime = childSnapshot.val().startTime;
-  let trainFrequency = childSnapshot.val().frequency;
+  var trainName = childSnapshot.val().name;
+  var trainDestination = childSnapshot.val().destination;
+  var trainStartTime = childSnapshot.val().startTime;
+  var trainFrequency = childSnapshot.val().frequency;
 
   // alert("You added the train " + trainName + " heading to " + trainDestination + ".  This train first ran at " + trainStartTime + " and it arrives every " + trainFrequency + " minutes.");
 
   // Calculations
-// JARED
-  let currentTime = moment();
-  let timeSplitArray = trainStartTime.split(":");
-  let hour = timeSplitArray[0];
-  let minute = timeSplitArray[1];
-  
-  // Creating a new moment date object, and immediately set the hour and minute.
+
+  // trainStartTime = "4:20"
+  // currentTime = "4:32"
+
+  // if // the currentTime is later than the trainStartTime
+
+    // result = currentTime - trainStartTime = // 12
+
+    // diff = result % freq; // 0
+
+    // nextTrainTime = currentTime + diff
+
+  // else {
+
+  // }
+
+//
+var currentTime = moment();
+// moment().hour(Number).minute(Number)
+var timeSplitArray = trainStartTime.split(":");
+var hour = timeSplitArray[0];
+var minute = timeSplitArray[1];
+
+// Creating a new moment date object, and immediately set the hour and minute.
+trainStartTime = moment().hour(hour).minute(minute);
+
+let formattedNextTrainTime = '';
+let formattedMinutesAway = '';
+
+ // Math for Next Arrival 
+if (currentTime.isAfter(trainStartTime, 'minutes')) {
+  // var timeDiffMilliseconds = currentTime.diff(trainStartTime, "minutes"); // Returns the difference in miliseconds.
+  var timeDiffMinutes = currentTime.diff(trainStartTime, "minutes"); // Returns the difference in miliseconds.
+  // var timeDiffMinutes = timeDiffMilliseconds / 60000; 
+  // var trainFrequencyMiliseconds = trainFrequency * 60000;
+  var remainderDiffMinutes = ( timeDiffMinutes % trainFrequency );
+  // var remainderDiffMiliseconds = ( timeDiffMilliseconds % trainFrequencyMiliseconds );
+  // var remainderDiffMiliseconds = ( timeDiffMilliseconds % trainFrequencyMiliseconds );
+
+  // let minutesToAdd = Math.floor(remainderDiffMiliseconds / 60000);
+  // let minutesToAdd = Math.ceil(remainderDiffMiliseconds / 60000);
+
+  currentTime = currentTime.add(remainderDiffMinutes, "minutes");
+
+  formattedNextTrainTime = currentTime.format('h:mm A');
+  formattedMinutesAway = remainderDiffMinutes;
+
+
+
+  // var timeDiffMinutes = currentTime.diff(trainStartTime, "minutes"); // Returns the difference in miliseconds.
+  // var remainderDiffMinutes = ( timeDiffMinutes % trainFrequency );
+  // currentTime = currentTime.add(remainderDiffMinutes, "minutes");
+
+  // formattedNextTrainTime = currentTime.format('h:mm A');
+  // formattedMinutesAway = remainderDiffMinutes;
+
+}
+else if(currentTime.isBefore(trainStartTime, 'minutes')) {
+  // todo: if time is before
+}
+else {
+  // todo: is the same time. in which case you simply return the current time.
   trainStartTime = moment().hour(hour).minute(minute);
-  
-  let formattedNextTrainTime = '';
-  let formattedMinutesAway = '';
-  
-  // Calculate next arrival time and minutes away.
-  if (currentTime.isAfter(trainStartTime, 'minutes')) {
-      while(currentTime.isAfter(trainStartTime)) {
-          trainStartTime.add(trainFrequency, 'minutes');
-      }
-  
-      formattedNextTrainTime = trainStartTime.format('h:mm A');
-      formattedMinutesAway = trainStartTime.diff(currentTime, 'minutes');
-  }
-  else if(currentTime.isSameOrBefore(trainStartTime, 'minutes')) {
-      formattedNextTrainTime = trainStartTime.format('h:mm A');
-      formattedMinutesAway = trainStartTime.diff(currentTime, 'minutes');
-  }
-  
-  console.log('Next Arrival: ' + formattedNextTrainTime);
-  console.log('Minutes Away: ' + formattedMinutesAway)
-// JARED
-
-//ONE MORE BACK
-
-
+  formattedNextTrainTime = trainStartTime.format('h:m A');
+  formattedMinutesAway = 0;
+}
 
   // Create the new row
-  let newRow = $("<tr>").append(
+  var newRow = $("<tr>").append(
     $("<td>").text(trainName),
     $("<td>").text(trainDestination),
     $("<td>").text(trainFrequency),
